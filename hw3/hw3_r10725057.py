@@ -156,6 +156,7 @@ def main():
     plt.show()
 #3.plot activations of the first layer
     plt.imshow(train_X[1,0,:,:].cpu().detach().numpy(),cmap=plt.cm.binary)
+    train_X=train_X.to(device)
     conv1=model.conv1(train_X)
     axes=[]
     fig=plt.figure(figsize=(12,12))
@@ -186,7 +187,7 @@ def main():
     resnet18.fc = nn.Linear(512, 10)
     resnet18.conv1=nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
     resnet18=resnet18.to(device)
-    optimizer_resnet=torch.optim.Adam(resnet18.parameters(),lr=1e-3,weight_decay=1e-5)
+    optimizer_resnet=torch.optim.Adam(resnet18.parameters(),lr=1e-3,weight_decay=1e-4)
     #resnet traininig
     trainloss_resnet=0
     testloss_resnet=0
@@ -229,47 +230,47 @@ def main():
       testloss_resnet=0
       train_correct_resnet=0
       test_correct_resnet=0
-      #plot learning curve and accuracy curve
-      fig=plt.figure(figsize=(30,10),linewidth=2)
-      axis3 = fig.add_subplot(1, 2, 1)
-      axis4 = fig.add_subplot(1, 2, 2)
-      axis3.plot(epoch_,train_loss_resnet, label='train_loss')
-      axis3.plot(epoch_,test_loss_resnet,label='test_loss')
-      axis3.set_xlabel("Epoch")
-      axis3.set_ylabel("loss")
-      axis3.set_title('Learning Curve')
-      axis3.legend(loc="upper right",shadow=True)
-      axis4.plot(epoch_,train_acc_resnet, label='train_acc')
-      axis4.plot(epoch_,test_acc_resnet,label='test_acc')
-      axis4.set_xlabel("Epoch")
-      axis4.set_ylabel("Accuracy")
-      axis4.set_title('Accuracy')
-      axis4.legend(loc="upper right",shadow=True)
-      plt.show()
-      # plot activations of the first layer
-      plt.imshow(train_X[1,0,:,:].cpu().detach().numpy(),cmap=plt.cm.binary)
-      conv1_resnet=resnet18.conv1(train_X)
-      axes_resnet=[]
-      fig_resnet=plt.figure(figsize=(8,8))
-      for i in range(4*4):
-        axes_resnet.append(fig.add_subplot(4,4,i+1))
-        plt.imshow(conv1_resnet[1,i,:,:].cpu().detach().numpy(),cmap=plt.cm.binary)
-      fig_resnet.tight_layout()    
-      plt.show()
-      # classify the clothing and plot the corresponding image and label
-      out_resnet=resnet18(test_X)
-      out_eval_resnet = out_resnet.argmax(dim=1, keepdim=True)
-      out_eval_resnet=[out.item() for out in out_eval_resnet]
-      axes_pred_resnet=[]
-      fig_pred_resnet=plt.figure(figsize=(8,8))
-      for i in range(16):
-          axes_pred_resnet.append(fig_pred_resnet.add_subplot(4,4,i+1))
-          if out_eval_resnet[i]==testY[i]:
-            plt.imshow(test_X[i,0,:,:].cpu().detach().numpy(),cmap=plt.cm.binary)
-            plt.text(5, 5, labels[out_eval_resnet[i]], fontsize=15, color='green')
-          else:
-            plt.imshow(test_X[i,0,:,:].cpu().detach().numpy(),cmap=plt.cm.binary)
-            plt.text(5, 5, labels[out_eval_resnet[i]], fontsize=15, color='red')
-      plt.show()
+    #plot learning curve and accuracy curve
+    fig=plt.figure(figsize=(30,10),linewidth=2)
+    axis3 = fig.add_subplot(1, 2, 1)
+    axis4 = fig.add_subplot(1, 2, 2)
+    axis3.plot(epoch_,train_loss_resnet, label='train_loss')
+    axis3.plot(epoch_,test_loss_resnet,label='test_loss')
+    axis3.set_xlabel("Epoch")
+    axis3.set_ylabel("loss")
+    axis3.set_title('Learning Curve')
+    axis3.legend(loc="upper right",shadow=True)
+    axis4.plot(epoch_,train_acc_resnet, label='train_acc')
+    axis4.plot(epoch_,test_acc_resnet,label='test_acc')
+    axis4.set_xlabel("Epoch")
+    axis4.set_ylabel("Accuracy")
+    axis4.set_title('Accuracy')
+    axis4.legend(loc="upper right",shadow=True)
+    plt.show()
+    # plot activations of the first layer
+    plt.imshow(train_X[1,0,:,:].cpu().detach().numpy(),cmap=plt.cm.binary)
+    conv1_resnet=resnet18.conv1(train_X)
+    axes_resnet=[]
+    fig_resnet=plt.figure(figsize=(8,8))
+    for i in range(4*4):
+      axes_resnet.append(fig_resnet.add_subplot(4,4,i+1))
+      plt.imshow(conv1_resnet[1,i,:,:].cpu().detach().numpy(),cmap=plt.cm.binary)
+    fig_resnet.tight_layout()    
+    plt.show()
+    # classify the clothing and plot the corresponding image and label
+    out_resnet=resnet18(test_X)
+    out_eval_resnet = out_resnet.argmax(dim=1, keepdim=True)
+    out_eval_resnet=[out.item() for out in out_eval_resnet]
+    axes_pred_resnet=[]
+    fig_pred_resnet=plt.figure(figsize=(8,8))
+    for i in range(16):
+      axes_pred_resnet.append(fig_pred_resnet.add_subplot(4,4,i+1))
+      if out_eval_resnet[i]==testY[i]:
+        plt.imshow(test_X[i,0,:,:].cpu().detach().numpy(),cmap=plt.cm.binary)
+        plt.text(5, 5, labels[out_eval_resnet[i]], fontsize=15, color='green')
+      else:
+        plt.imshow(test_X[i,0,:,:].cpu().detach().numpy(),cmap=plt.cm.binary)
+        plt.text(5, 5, labels[out_eval_resnet[i]], fontsize=15, color='red')
+    plt.show()
 if __name__=='__main__':
     main()
