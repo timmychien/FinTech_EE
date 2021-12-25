@@ -18,7 +18,6 @@ import mpl_finance as mpf
 from pandas_datareader import data as pdr
 yf.pdr_override()
 from datetime import datetime
-from talib.abstract import *
 import matplotlib.pyplot as plt
 def main():
   #collect data by yfinance
@@ -36,8 +35,8 @@ def main():
   data_2019=data[start_2019:end_2019+1]
   data_2019=data_2019.set_index(data_2019['Date'])
   data_2019.index = data_2019.index.format(formatter=lambda x: x.strftime('%Y-%m-%d')) 
-  MA_10_2019 = SMA(data_2019['Close'], timeperiod=10)
-  MA_30_2019= SMA(data_2019['Close'], timeperiod=30)
+  MA_10_2019 = talib.SMA(data_2019['Close'], timeperiod=10)
+  MA_30_2019= talib.SMA(data_2019['Close'], timeperiod=30)
   data_2019['K'], data_2019['D'] = talib.STOCH(data_2019['High'], data_2019['Low'], data_2019['Close'])
   data_2019['K'].fillna(value=0, inplace=True)
   data_2019['D'].fillna(value=0, inplace=True)
