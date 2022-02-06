@@ -95,18 +95,18 @@ def main():
         train,target=train_data
         y_pred=model.forward(train)
         loss=criterion(y_pred,target)
-        loss.backward()
         trainloss+=loss
-        optimizer.step()
         optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
       with torch.no_grad():
         for valid_data in validloader:
           val,val_target=valid_data
           y_eval=model.forward(val)
           loss_val=criterion(y_eval,val_target)
           valloss+=loss_val
-      train_loss.append((trainloss/batch_size).detach().numpy())
-      val_loss.append((valloss/batch_size).detach().numpy())
+      train_loss.append((trainloss/len(train_dataset)).detach().numpy())
+      val_loss.append((valloss/len(valid_dataset)).detach().numpy())
       y_train_pred=model(X_train)
       y_train_pred_class=y_train_pred.round()
       train_accuracy=(y_train_pred_class.eq(y_train).sum())/float(y_train.shape[0])
@@ -115,7 +115,7 @@ def main():
       y_pred_class=y_pred.round()
       valid_accuracy=(y_pred_class.eq(y_test).sum())/float(y_test.shape[0])
       val_acc.append(valid_accuracy)
-      print(f'epoch:{epoch} train_loss:{trainloss/batch_size} val_loss:{valloss/batch_size} train_acc:{train_accuracy.item()} val_acc:{valid_accuracy.item()}')
+      print(f'epoch:{epoch} train_loss:{trainloss/len(train_dataset)} val_loss:{valloss/len(valid_dataset} train_acc:{train_accuracy.item()} val_acc:{valid_accuracy.item()}')
       trainloss=0
       valloss=0
     
