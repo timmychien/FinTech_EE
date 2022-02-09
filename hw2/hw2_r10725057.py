@@ -115,7 +115,7 @@ def main():
       y_pred_class=y_pred.round()
       valid_accuracy=(y_pred_class.eq(y_test).sum())/float(y_test.shape[0])
       val_acc.append(valid_accuracy)
-      print(f'epoch:{epoch} train_loss:{trainloss/len(train_dataset)} val_loss:{valloss/len(valid_dataset} train_acc:{train_accuracy.item()} val_acc:{valid_accuracy.item()}')
+      print(f'epoch:{epoch} train_loss:{trainloss/len(train_dataset)} val_loss:{valloss/len(valid_dataset)} train_acc:{train_accuracy.item()} val_acc:{valid_accuracy.item()}')
       trainloss=0
       valloss=0
     
